@@ -35,6 +35,15 @@ def main() -> int:
     if not text.strip():
         print("entry must not be only whitespace", file=sys.stderr)
         return 1
+    # A spoken apology has no leading/trailing padding: if the line ever
+    # gains a stray space, fail loudly instead of shipping a sloppy read.
+    if text != text.strip():
+        print("entry must not start or end with whitespace", file=sys.stderr)
+        return 1
+    # The device owns the apology: it must open with the apology itself.
+    if not text.startswith("Sorry"):
+        print("entry must open with the speaker's apology", file=sys.stderr)
+        return 1
 
     written = None
     for path in OUTPUT_PATHS:
